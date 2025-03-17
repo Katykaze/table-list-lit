@@ -3,16 +3,16 @@
 import { LitElement, html, css } from 'lit';
 
 //---------- import services
-import ApiService from '../services/apiService.js';
+import ApiService from '../../services/apiService.js';
 
 //---------- import utils
 import { cloneDeep } from "lodash";
-import formatData from '../../utils/formatData.js';
+import formatData from '../../../utils/formatData.js';
 
 //---------- import components
-import '../components/table.js';
-import '../components/button.js';
-import '../components/select.js';
+import '../../components/table.js';
+import '../../components/button.js';
+import '../../components/select.js';
 
 
 

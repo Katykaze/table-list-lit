@@ -32,7 +32,7 @@ class Select extends LitElement {
             width:50%;
             padding: 12px 20px;
             margin: 8px 0;
-            border: 1px solid #009879;;
+            border: 1px solid #009879;
             border-radius: 4px;
             background-color: #ffffff;
             color: #009879;
