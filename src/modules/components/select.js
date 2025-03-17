@@ -7,7 +7,6 @@ class Select extends LitElement {
 
     constructor() {
         super();
-        this.options = [];
     }
 
     handleChange(event) {       

@@ -84,7 +84,6 @@ class PrincipalPage extends LitElement {
             Object.entries(item.attributes).forEach(([key, value]) => {
                 row[key] = formatData(value);
             });
-            console.log(row,'row')
             return row;
         });
     }
