@@ -10,7 +10,6 @@ import "./modules/views/formPage/formPage.js";
 class App extends LitElement {
 	constructor() {
 		super();
-        this.currentRoute = '';
 		// --- configuration router
 		this.router = new Router(this, [
 			{ path: "/", render: () => html`<wc-home></wc-home>` },
@@ -23,11 +22,6 @@ class App extends LitElement {
 				render: () => html`<wc-form-page></wc-form-page>`,
 			},
 		]);
-
-        //listen to route changes
-        window.addEventListener('route-changed',(e)=>{
-            console.log(e,'e')
-        })
 	}
 	render() {
 		const currentRoute = this.router._currentRoute.path;
