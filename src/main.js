@@ -85,6 +85,7 @@ class App extends LitElement {
 	}
 }
 
+
 customElements.define("my-app", App);
 
 // Renderiza la aplicación en el body

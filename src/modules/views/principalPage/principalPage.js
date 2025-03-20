@@ -63,7 +63,7 @@ class PrincipalPage extends LitElement {
             <wc-select .options=${this.optionsSelect} @change=${this.handleChange}></wc-select>
             <wc-button text="Select a dog" @button-click=${this.handleButtonClick}></wc-button>
             </div>
-            <wc-table .columns=${this.columns} .rows=${this.rows} ></wc-table>`;
+            <wc-table .columns=${this.columns} .rows=${this.rows} ></wc-table>`
     }
 
     obtainColumns(data) {

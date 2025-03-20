@@ -23,15 +23,15 @@ class Select extends LitElement {
 	}
 
 	render() {
-		return html` ${this.title ? html`<p>${this.title}</p>` : ""};
+		return html` ${this.title ? html`<p>${this.title}</p>` : ""}
 			<select @change=${this.handleChange}>
 				<option value="" label="Select an option"></option>
 				${this.options.map(
-					(option) =>
-						html`<option value=${option.value}>
+			(option) =>
+				html`<option value=${option.value}>
 							${option.label}
 						</option>`
-				)}
+		)}
 			</select>`;
 	}
 
