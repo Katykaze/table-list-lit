@@ -3,7 +3,6 @@ import { LitElement, html, css } from "lit";
 import { Router } from "@lit-labs/router";
 
 //---------- import views
-import "./modules/views/home.js";
 import "./modules/views/principalPage/principalPage.js";
 import "./modules/views/formPage/formPage.js";
 
@@ -12,9 +11,9 @@ class App extends LitElement {
 		super();
 		// --- configuration router
 		this.router = new Router(this, [
-			{ path: "/", render: () => html`<wc-home></wc-home>` },
+			
 			{
-				path: "/principal",
+				path: "/",
 				render: () => html`<wc-principal-page></wc-principal-page>`,
 			},
 			{
@@ -26,16 +25,13 @@ class App extends LitElement {
 	render() {
 		const currentRoute = this.router._currentRoute.path;
 		return html`
-			<nav class="container-navigationBar">
-				<div class="nav-item ${currentRoute === "/" ? "selected" : ""}">
-					<a href="/">Home</a>
-				</div>
+			<nav class="container-navigationBar">			
 				<div
-					class="nav-item ${currentRoute === "/principal"
+					class="nav-item ${currentRoute === "/"
 						? "selected"
 						: ""}"
 				>
-					<a href="/principal">Principal Page</a>
+					<a href="/">Principal Page</a>
 				</div>
 				<div
 					class="nav-item ${currentRoute === "/form"

@@ -19,7 +19,9 @@ import '../../components/select.js';
 class PrincipalPage extends LitElement {
      static properties = {
          columns: { type: Array },//columns rows
-         rows:{type:Array}//reactive rows
+         rows: { type: Array },//reactive rows
+         selected: { type: String },//selected
+         
     };
 
     constructor() {
@@ -47,8 +49,7 @@ class PrincipalPage extends LitElement {
         }
     }
 
-    async handleButtonClick() {
-        
+    async handleButtonClick() {      
         try {
             const response = await ApiService.getDog(this.selected);
             this.obtainRows(response);
@@ -58,14 +59,6 @@ class PrincipalPage extends LitElement {
         this.selected = event.detail.value;
     }
     
-    render() {
-        return html`<div class="container__form">
-            <wc-select .options=${this.optionsSelect} @change=${this.handleChange}></wc-select>
-            <wc-button text="Select a dog" @button-click=${this.handleButtonClick}></wc-button>
-            </div>
-            <wc-table .columns=${this.columns} .rows=${this.rows} ></wc-table>`
-    }
-
     obtainColumns(data) {
        
         const columnsSet = new Set();
@@ -94,7 +87,14 @@ class PrincipalPage extends LitElement {
         label: item.attributes.name
     }));
     return this.optionsSelect;
-}
+    }
+        render() {
+        return html`<div class="container__form">
+            <wc-select .options=${this.optionsSelect} @change=${this.handleChange}></wc-select>
+            <wc-button text="Select a dog" ?disabled=${this.selected === ''} @button-click=${this.handleButtonClick}></wc-button>
+            </div>
+            <wc-table .columns=${this.columns} .rows=${this.rows} ></wc-table>`
+    }
 
     static styles = css`
     .container__form {

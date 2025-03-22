@@ -14,12 +14,19 @@ class Button extends LitElement {
         this.disabled = false;
     }
     handleClick() {
+        if (this.disabled) return;
+        // Dispatch a custom event when the button is clicked
         this.dispatchEvent(new CustomEvent('button-click', {
             detail: {message:'Button clicked'},
             bubbles: true,
             composed: true
         }));
     }
+    handleDisabled() {
+        this.disabled = !this.disabled;
+        return this.disabled;
+    }
+
     render() {
         return html`<button ?disabled=${this.disabled} @click=${this.handleClick}>${this.text}</button>`;
     }
@@ -35,6 +42,11 @@ class Button extends LitElement {
                 text-decoration: none;
                 margin: 4px 2px;
                 cursor: pointer;
+            }
+            button:disabled {
+                background-color: #cccccc;
+                color: #666666;
+                cursor: not-allowed;
             }
         `;
     }
