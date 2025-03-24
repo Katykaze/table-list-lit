@@ -4,16 +4,19 @@ class Input extends LitElement {
 	static properties = {
 		type: { type: String },
 		placeholder: { type: String },
-		value: { type: String },
+		value: { type: String, state: true },
 	};
 	constructor() {
 		super();
+		this.type = "text";
+		this.placeholder = "";
+		this.value = "";
 	}
 
 	render() {
 		return html`<input
 			.type=${this.type}
-			.placeholder=${this.placeholder}
+			placeholder=${this.placeholder}
 			.value=${this.value}
 			@input=${this.handleInput}
 		/>`;
@@ -23,7 +26,7 @@ class Input extends LitElement {
 		const newValue = event.target.value;
 		 this.value = newValue; 
 			this.dispatchEvent(
-				new CustomEvent("input", {
+				new CustomEvent("input-change", {
 					detail: { value: newValue }, 
 					bubbles: true,
 					composed: true,
@@ -34,14 +37,18 @@ class Input extends LitElement {
 	static get styles() {
 		return css`
 			input {
-				width: 50%;
-				padding: 12px 20px;
-				margin: 8px 0;
-				border: 1px solid #009879;
-				border-radius: 4px;
-				background-color: #ffffff;
-				color: #009879;
-			}
+            --border-color: #009879;
+            --background-color: #ffffff;
+            --text-color: #009879;
+
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
 		`;
 	}
 }

@@ -4,7 +4,6 @@ class Button extends LitElement {
     static properties = {
         text: { type: String },
         disabled: { type: Boolean },
-        onClick: { type: Function }
     };
 
  
@@ -17,14 +16,10 @@ class Button extends LitElement {
         if (this.disabled) return;
         // Dispatch a custom event when the button is clicked
         this.dispatchEvent(new CustomEvent('button-click', {
-            detail: {message:'Button clicked'},
+            detail: {message:'Button clicked',text:this.text,disabled:this.disabled},
             bubbles: true,
             composed: true
         }));
-    }
-    handleDisabled() {
-        this.disabled = !this.disabled;
-        return this.disabled;
     }
 
     render() {
@@ -32,22 +27,27 @@ class Button extends LitElement {
     }
        static get styles() {
         return css`
-            button {
-                background-color: #009879;
-                color: #ffffff;
-                border:none;
-                border-radius: 10px;
-                padding: 10px 20px;
-                text-align: center;
-                text-decoration: none;
-                margin: 4px 2px;
-                cursor: pointer;
-            }
-            button:disabled {
-                background-color: #cccccc;
-                color: #666666;
-                cursor: not-allowed;
-            }
+           button {
+            --bg-color: #009879;
+            --text-color: #ffffff;
+            --disabled-bg-color: #cccccc;
+            --disabled-text-color: #666666;
+
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: var(--disabled-bg-color);
+            color: var(--disabled-text-color);
+            cursor: not-allowed;
+        }
         `;
     }
  }

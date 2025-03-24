@@ -6,12 +6,11 @@ import "../../components/table.js"
 
 class FormPage extends LitElement {
 	static properties = {
-		formData: { name: { type: String }, description: { type: String }, numberLife: { type: String }, numberWeightMale: { type: String }, numberWeightFemale: { type: String }, hipoallergenic: { type: String } },
-		rows:{ type: Array},
+		formData: { type: Object },
 	};
 	constructor() {
 		super();
-		this.formData = {name:'', description:'', numberLife:'', numberWeightMale:'', numberWeightFemale:'', hipoallergenic:''};
+		this.formData = this.getEmptyFormData();
 		this.optionsSelect = [
 			{ value: true, label: "Yes" },
 			{ value: false, label: "No" },
@@ -19,23 +18,35 @@ class FormPage extends LitElement {
 		this.columns = ['name', 'description', 'numberLife', 'numberWeightMale', 'numberWeightFemale', 'hipoallergenic'];
 		this.rows = [];
 	}
-    handleInput(inputName) {
+
+	getEmptyFormData() {
+		return {
+			name: '', description: '', numberLife: '', numberWeightMale: '', numberWeightFemale: '', hipoallergenic: ''
+		}
+	}
+	handleInput(inputName) {
 		return (event) => {
 			let value = event.target.value;
 			if (inputName == 'hipoallergenic') {
 				value === true ? value = 'Yes' : value = 'No';
+				//value = value === 'true' || value === true;
 			}
-			this.formData = {...this.formData,[inputName]:value}
-        }
+			this.formData = { ...this.formData, [inputName]: value }
+		}
 	}
 
 	handleSave() {
 		if (this.isEmptyObject()) return;
-		this.rows = [...this.rows, this.formData];
+		// create copy of formData
+		const rowData = { ...this.formData };
+		rowData.hipoallergenic = this.formData.hipoallergenic ? 'Yes' : 'No';
+
+		this.rows = [...this.rows, rowData];
+		this.cleanFilters(); // reset formData
 	}
 
 	cleanFilters() {
-		this.formData = { name: '', description: '', numberLife: '', numberWeightMale: '', number: '', WeightFemale: '', hipoallergenic: '' };
+		this.formData = this.getEmptyFormData();
 	}
 	isEmptyObject() {
 		return Object.values(this.formData).every((value) => value === '');
@@ -50,40 +61,40 @@ class FormPage extends LitElement {
 						type="text"
 						placeholder="Name"
 						.value=${this.formData.name}
-                        @input=${this.handleInput('name')}
+                        @input-change=${this.handleInput('name')}
 					></wc-input>
 					<wc-input
 						name="description"
 						type="text"
 						placeholder="Description"
 						.value=${this.formData.description}
-						@input=${this.handleInput('description')}
+						@input-change=${this.handleInput('description')}
 					></wc-input>
 					<wc-input
 						name="numberLife"
 						type="text"
 						placeholder="Life"
 						.value=${this.formData.numberLife}
-						@input=${this.handleInput('numberLife')}
+						@input-change=${this.handleInput('numberLife')}
 					></wc-input>
 					<wc-input
 						name="numberWeightMale"
 						type="text"
 						placeholder="Male Weight"
 						.value=${this.formData.numberWeightMale}
-						@input=${this.handleInput('numberWeightMale')}
+						@input-change=${this.handleInput('numberWeightMale')}
 					></wc-input>
 					<wc-input
 						name="numberWeightFemale"
 						type="text"
 						placeholder="Female Weight"
 						.value=${this.formData.numberWeightFemale}
-						@input=${this.handleInput('numberWeightFemale')}
+						@input-change=${this.handleInput('numberWeightFemale')}
 					></wc-input>
 					<wc-select
 						title="Hipoallergenic?"
 						.options=${this.optionsSelect}
-						@change=${this.handleInput('hipoallergenic')}
+						@select-change=${this.handleInput('hipoallergenic')}
 					></wc-select>
 				</form>
 				<wc-button

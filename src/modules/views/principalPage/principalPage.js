@@ -17,62 +17,53 @@ import '../../components/select.js';
 
 
 class PrincipalPage extends LitElement {
-     static properties = {
-         columns: { type: Array },//columns rows
-         rows: { type: Array },//reactive rows
-         selected: { type: String },//selected
-         
+    static properties = {
+        columns: { type: Array },//columns rows
+        rows: { type: Array },//reactive rows
+        selected: { type: String },//selected
+        optionsSelect: { type: Array },//options select
+        isLoading :{ type: Boolean, state: true} // state true because is internal state
+
     };
 
-    constructor() {
-        super();
-        this.columns = [];
-        this.rows = []
-        this.selected = '';
-        this.optionsSelect = [];
 
+    async connectedCallback() {
+        super.connectedCallback(); //call because is a lifecycle method
+        await this.fetchData();
+        
     }
 
- 
-    async connectedCallback() {
-        super.connectedCallback(); //llamar siempre para sobreescribir al metodo LitElement
+    async fetchData() {
         try {
+            this.loading = true;
             const data = await ApiService.list();
             const clonedData = cloneDeep(data);
-            
-            this.obtainColumns(clonedData)
-            this.obtainRows(clonedData);
+
+            this.columns = this.obtainColumns(clonedData)
+            this.rows = this.obtainRows(clonedData);
             this.optionsSelect = this.getOptionsSelect(clonedData);
-            
+
         } catch (e) {
-            console.log(e)
+            console.error("API - ERROR", e)
+        } finally {
+            this.loading = false;
         }
     }
 
-    async handleButtonClick() {      
-        try {
-            const response = await ApiService.getDog(this.selected);
-            this.obtainRows(response);
-        } catch (e) { console.log(e); }
-    }
-    handleChange(event) {
-        this.selected = event.detail.value;
-    }
-    
     obtainColumns(data) {
-       
+
         const columnsSet = new Set();
-        for(const key in data) {
-            for(const key2 in data[key].attributes) {
-                columnsSet.add(key2);
-                
-            }
-        }
-        this.columns = Array.from(columnsSet).map(column => (column));
+        data.forEach(item => {
+            Object.keys(item.attributes).forEach(key => {
+                columnsSet.add(key);
+            });
+        });
+        return Array.from(columnsSet).map(column => (column));
     }
-    obtainRows(data) {       
+    obtainRows(data) {
+
         const dataArray = Array.isArray(data) ? data : [data];
-        this.rows = dataArray.map(item => {
+        return dataArray.map(item => {
             const row = {};
             Object.entries(item.attributes).forEach(([key, value]) => {
                 row[key] = formatData(value);
@@ -81,30 +72,66 @@ class PrincipalPage extends LitElement {
         });
     }
 
-   getOptionsSelect(data) {
-    this.optionsSelect = data.map(item => ({
-        value: item.id,
-        label: item.attributes.name
-    }));
-    return this.optionsSelect;
+    getOptionsSelect(data) {
+        return data.map(item => ({
+            value: item.id,
+            label: item.attributes.name
+        }));
     }
-        render() {
-        return html`<div class="container__form">
-            <wc-select .options=${this.optionsSelect} @change=${this.handleChange}></wc-select>
-            <wc-button text="Select a dog" ?disabled=${this.selected === ''} @button-click=${this.handleButtonClick}></wc-button>
+
+    async handleButtonClick() {
+        try {
+            this.loading = true;
+            const response = await ApiService.getDog(this.selected);
+            this.rows = this.obtainRows(response);
+        } catch (e) {
+            console.error("FAILED  TO FETCH DOG", e);
+            this.rows = [];
+        } finally {
+            this.loading = false;
+        }
+    }
+    handleChange(event) {
+        this.selected = event.detail.value;
+    }
+
+
+    render() {
+        if (this.loading) {
+            return html`<div class="loading">Loading...</div>`;
+        }
+        return html`<div class="principal__container">
+            <div class="container__form">
+            <wc-select .options=${this.optionsSelect} @select-change=${this.handleChange}></wc-select>
+            <wc-button text="Select a dog" ?disabled=${!this.selected} @button-click=${this.handleButtonClick}></wc-button>
             </div>
-            <wc-table .columns=${this.columns} .rows=${this.rows} ></wc-table>`
+            <wc-table .columns=${this.columns} .rows=${this.rows} ></wc-table>
+            </div>`
     }
 
     static styles = css`
+    :host {
+        display:block;
+        padding:1rem;
+    }
+     .principal__container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
     .container__form {
-        display:flex;
-        flex-direction:column;
-        width:100%;
-        gap:16px;
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        align-items: flex-end;
         
+    }
+   
+    @media (max-width: 600px) {
+        .container__form {
+            flex-direction: column;
+        }
     }`;
-       
+
 }
 
 customElements.define('wc-principal-page', PrincipalPage);

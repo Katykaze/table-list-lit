@@ -3,18 +3,16 @@ import { html, css, LitElement } from "lit";
 class Select extends LitElement {
 	static properties = {
 		options: { type: Array },
-		title: { type: String },
-		visible: { type: Boolean },
+		title: { type: String }
 	};
 
 	constructor() {
 		super();
-		this.visible = false;
 	}
 
 	handleChange(event) {
 		this.dispatchEvent(
-			new CustomEvent("change", {
+			new CustomEvent("select-change", {
 				detail: { value: event.target.value },
 				bubbles: true,
 				composed: true,
@@ -26,7 +24,7 @@ class Select extends LitElement {
 		return html` ${this.title ? html`<p>${this.title}</p>` : ""}
 			<select @change=${this.handleChange}>
 				<option value="" label="Select an option"></option>
-				${this.options.map(
+				${this.options?.map(
 			(option) =>
 				html`<option value=${option.value}>
 							${option.label}
@@ -38,14 +36,18 @@ class Select extends LitElement {
 	static get styles() {
 		return css`
 			select {
-				width: 50%;
-				padding: 12px 20px;
-				margin: 8px 0;
-				border: 1px solid #009879;
-				border-radius: 4px;
-				background-color: #ffffff;
-				color: #009879;
-			}
+            --border-color: #009879;
+            --background-color: #ffffff;
+            --text-color: #009879;
+
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
 		`;
 	}
 }

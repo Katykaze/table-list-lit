@@ -4,29 +4,29 @@ import { LitElement, html, css } from 'lit';
 class Table extends LitElement {
      static properties = {
          columns: { type: Array },
-         rows:{type:Array}
+         rows: { type: Array }
     };
-
 
 
     render() {
         return html`
-            <table>
+            <table >
                 <thead>
                     <tr>
-                        ${this.columns.map(column => html`<th>${column}</th>`)}
+                        ${this.columns?.map(column => html`<th>${column}</th>`)}
                     </tr>
                 </thead>
                 <tbody>
-                    ${this.rows.map(row => html`
+                    ${this.rows?.map(row => html`
                         <tr>
-                            ${this.columns.map(column => html`<td>${row[column]}</td>`)}
+                            ${this.columns?.map(column => html`<td>${row[column] ?? "-"}</td>`)}
                         </tr>
                     `)}
                 </tbody>
             </table>
         `;
     }
+    
     static get styles() {
         return css`
         table {
